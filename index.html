@@ -5,53 +5,64 @@
 <title>画像ビューア</title>
 
 <style>
-html, body{
+html,body{
     margin:0;
     width:100%;
     height:100%;
-    overflow:hidden;
     background:black;
+    overflow:hidden;
 }
 
 #img{
     width:100vw;
     height:100vh;
-    object-fit:contain;   /* 全体を表示 */
-    display:block;
-    user-select:none;
+    object-fit:contain;
 }
 </style>
-
 </head>
+
 <body>
 
 <img id="img">
 
 <script>
 const folder = "1";
+const max = 173;
 
 let current = 1;
-const img = document.getElementById("img");
 
-function updateImage(){
-    const num = String(current).padStart(4,"0");
-    img.src = `${folder}/_${num}.jpg`;
+const img = document.getElementById("img");
+const images = [];
+
+// 全画像を先読み
+for(let i=1;i<=max;i++){
+    const image = new Image();
+    image.src = `${folder}/_${String(i).padStart(4,"0")}.jpg`;
+    images.push(image);
 }
 
-// 最初の画像
+function updateImage(){
+    img.src = images[current-1].src;
+}
+
 updateImage();
 
-// 左クリックで次へ
-document.addEventListener("click", () => {
-    current++;
-    updateImage();
+document.addEventListener("click",()=>{
+    if(current < max){
+        current++;
+        updateImage();
+    }
 });
 
-// 画像が存在しない場合は最後なので戻す
-img.onerror = function(){
-    current--;
-    updateImage();
-};
+// 右クリックで戻る
+document.addEventListener("contextmenu",(e)=>{
+    e.preventDefault();
+
+    if(current > 1){
+        current--;
+        updateImage();
+    }
+});
 </script>
 
 </body>
