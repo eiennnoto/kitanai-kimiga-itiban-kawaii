@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>画像ビューア</title>
+
+<style>
+html, body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:black;
+}
+
+#img{
+    width:100vw;
+    height:100vh;
+    object-fit:contain;   /* 全体を表示 */
+    display:block;
+    user-select:none;
+}
+</style>
+
+</head>
+<body>
+
+<img id="img">
+
+<script>
+const folder = "1";
+
+let current = 1;
+const img = document.getElementById("img");
+
+function updateImage(){
+    const num = String(current).padStart(4,"0");
+    img.src = `${folder}/_${num}.jpg`;
+}
+
+// 最初の画像
+updateImage();
+
+// 左クリックで次へ
+document.addEventListener("click", () => {
+    current++;
+    updateImage();
+});
+
+// 画像が存在しない場合は最後なので戻す
+img.onerror = function(){
+    current--;
+    updateImage();
+};
+</script>
+
+</body>
+</html>
